@@ -115,7 +115,49 @@ def load_storyboard(P):
         e['seed'] = k
         events.append(e)
     events.sort(key=lambda e: e['start'])
-    return dict(scenes=scenes, events=events)
+    shots = load_shots(raw.get('shots', []), R)
+    if shots and not raw.get('scenes'):
+        scenes = [dict(start=s['start'], mood=SHOT_MOOD.get(s.get('bg', 'day'), 'default')) for s in shots]
+        if scenes[0]['start'] > 0:
+            scenes.insert(0, dict(start=0.0, mood=scenes[0]['mood']))
+    return dict(scenes=scenes, events=events, shots=shots)
+
+
+SHOT_MOOD = dict(day='day', dawn='dawn', dusk='dusk', night='night', storm='storm', dark='night', fire='dusk', indoor='default', paper='default')
+
+
+def load_shots(raw, R):
+    """shots: [{start, bg, cam, items:[{k, x, y, s, in, out, move, ...}], fx:[{k, at, end, hits, ...}]}]"""
+    shots = []
+    for si, sh in enumerate(raw):
+        sh = dict(sh)
+        sh['start'] = R.t(sh['start'])
+        items = []
+        for ii, it in enumerate(sh.get('items', [])):
+            it = dict(it)
+            it['in'] = R.t(it['in']) if 'in' in it else sh['start'] + 0.15 + 0.3 * ii
+            for key in ('out',):
+                if key in it:
+                    it[key] = R.t(it[key])
+            if 'move' in it:
+                it['move'] = [R.t(x) for x in it['move']]
+            items.append(it)
+        sh['items'] = items
+        fxs = []
+        for fi, f in enumerate(sh.get('fx', [])):
+            f = dict(f)
+            f['at'] = R.t(f['at']) if 'at' in f else sh['start']
+            if 'end' in f:
+                f['end'] = R.t(f['end'])
+            if 'flee' in f:
+                f['flee'] = R.t(f['flee'])
+            f['hits'] = R.hits(f.get('hits'))
+            f['seed'] = si * 10 + fi
+            fxs.append(f)
+        sh['fx'] = fxs
+        shots.append(sh)
+    shots.sort(key=lambda s: s['start'])
+    return shots
 
 
 # keyword -> event template used by --draft
@@ -188,6 +230,10 @@ def lint(P, verbose=True):
         desc = e['type'] + (f"/{e.get('shape')}" if e['type'] == 'prop' else '') + (f" '{e.get('text', '')}'" if e.get('text') else '')
         marks.append((e['start'], desc))
         marks.extend((h, f'  · hit {e["type"]}') for h in e['hits'][:1])
+    for sh in P.sb.get('shots', []):
+        marks.append((sh['start'], f"SHOT bg={sh.get('bg', 'day')} " + ' '.join(it['k'] for it in sh['items'])))
+        marks.extend((it['in'], f"  + {it['k']}") for it in sh['items'] if it['in'] > sh['start'] + 0.2)
+        marks.extend((f['at'], f"  ~ {f['k']}") for f in sh['fx'] if f['at'] > sh['start'] + 0.2)
     marks.sort()
     starts = sorted(m[0] for m in marks)
     for txt, ts, end in P.lyr:
