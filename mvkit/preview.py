@@ -60,7 +60,8 @@ def busiest(P, win):
 def sheet(P, key, times, out):
     S = load_style(key, P)
     ims = stills(None, key, times, P=P, S=S)
-    tw, th, pad, head = 405, 720, 16, 150
+    tw, pad, head = 405, 16, 150
+    th = tw * P.OH // P.OW
     cols = 4
     rows = (len(ims) + cols - 1) // cols
     sh = Image.new('RGB', (cols * tw + (cols + 1) * pad, head + rows * (th + pad) + pad), (22, 22, 26))

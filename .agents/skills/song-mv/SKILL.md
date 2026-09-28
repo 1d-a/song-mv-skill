@@ -11,7 +11,7 @@ Repo: https://github.com/1d-a/song-mv-skill (toolkit `mvkit/`, fonts, full examp
 - **No people / characters acting out a plot.** Tell the story with objects (木剑、破衫、火药包、红线…), landscape, weather, sun/moon, text glyphs, camera moves and beat effects.
 - **The sung sections must keep changing visually, like the intro does.** Not just lyrics over a static backdrop: a new scene (mood change / page / wipe) every ~2 lines and at least one new event per line. `python -m mvkit.storyboard PROJECT` must print `no problems found`.
 - Lyrics appear per character at the **actual sung time** (from `mvkit.align`), not evenly spread.
-- Output: 1080×1920, 30 fps, H.264 + original audio (AAC), full song length.
+- Output: 3:4 (1080×1440) by default -- always produce the final video in 3:4 unless the user asks otherwise (`"aspect": "9:16"` in project.json gives 1080×1920). 30 fps, H.264 + original audio (AAC), full song length. Styles draw on a 1080×1920 design canvas and the renderer crops it (`view_y`); crayon picture-book shots are reflowed into a shorter box automatically, so storyboard coordinates stay in the 1920 design space.
 - Opening title + subtitle are shown in the chosen style's own typography during the intro — nothing else in the intro (no lyric teaser, credits or seal unless the user asks; set `"credits": ""`, `"seal": ""`).
 - No on-screen text that isn't sung: `[...]` tags are performance cues, never shown; `stamp`/glyph/pouch texts must be words from the lyrics sung at that moment.
 - Chorus / climax lyrics get a dedicated `lyricfx` treatment matching the section's mood (`bold` confident, `fragile` vulnerable, `tragic` heavy resolve, `rise` crescendo, `final` biggest: giant slamming characters, flash, shake, rays). Currently implemented in `crayon`.

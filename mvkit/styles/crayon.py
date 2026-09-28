@@ -123,9 +123,13 @@ class Style:
         self.sub = text_layer(P.subtitle, font('kai', size), (230, 110, 40, 255), spacing=6) if P.subtitle else None
         self.page_starts = [s['start'] for s in P.scenes]
         self.book = None
+        self.view_y = 0 if P.OH == H else 240
+        self.ly, self.tpos, self.fy = (1735, 300, 1420) if P.OH == H else (self.view_y + P.OH - 185, self.view_y + 180, self.view_y + P.OH - 400)
         if P.sb.get('shots'):
             self.book = Book(self, P.sb['shots'])
             self.book.prepare()
+            self.view_y = self.book.view_y
+            self.ly, self.tpos, self.fy = self.book.box[3] + 125, round(self.book.Y(300)), round(self.book.Y(1420))
             rn = np.random.default_rng(11)
             coarse = Image.fromarray((rn.random((16, 9)) * 255).astype(np.uint8)).resize((W, H), Image.BICUBIC)
             fine = Image.fromarray((rn.random((64, 36)) * 255).astype(np.uint8)).resize((W, H), Image.BICUBIC)
@@ -641,7 +645,7 @@ class Style:
         P = self.P
         fa = 1 - ease((t - P.title_out) / 0.5)
         if fa > 0:
-            tpos = 300
+            tpos = self.tpos
             if t > 0.3:
                 p = eout((t - 0.3) / 0.6)
                 paste_center(canvas, self.title, W / 2 + jit[0], tpos + (1 - p) * -80 + jit[1], alpha=p * fa, rot=r.normal() * 0.8)
@@ -664,7 +668,7 @@ class Style:
             x = W / 2 + (j - (nn - 1) / 2) * step + jit[0]
             pe = eout(p)
             cc = char_img(ch, LYR_FONT, int(step * 0.92), (40, 40, 45, 255), stroke=3, stroke_fill=(255, 250, 240, 255))
-            paste_center(canvas, cc, x, 1735 - 30 * (1 - pe) + r.normal() * 1.5, alpha=pe * la, rot=r.normal() * 2)
+            paste_center(canvas, cc, x, self.ly - 30 * (1 - pe) + r.normal() * 1.5, alpha=pe * la, rot=r.normal() * 2)
         for x in st:
             if self.tones[x[0]] is not None:
                 self.climax_char(canvas, t, r, jit, *x)
@@ -695,9 +699,8 @@ class Style:
             return min(124, 1000 / nn)
         return min(104, 960 / nn)
 
-    @staticmethod
-    def lyr_y(tn):
-        return dict(final=1420, bold=1700, tragic=1700, rise=1700).get(tn, 1735)
+    def lyr_y(self, tn):
+        return dict(final=self.fy, bold=self.ly - 35, tragic=self.ly - 35, rise=self.ly - 35).get(tn, self.ly)
 
     def climax_char(self, canvas, t, r, jit, li_, j, ch, p, la, dt):
         tn = self.tones[li_]

@@ -15,6 +15,7 @@ class Style:
 
     def __init__(self, P):
         self.P = P
+        self.view_y = 0 if P.OH == H else 240
         rng = np.random.default_rng(5)
         yy, _ = np.mgrid[0:HH, 0:W].astype(np.float32)
         self.u = (yy / HH)[..., None]
@@ -488,9 +489,9 @@ class Style:
         if 0.8 < t < to + 1.2:
             p = eout((t - 0.8) / 1.4) * (1 - ease((t - to + 0.1) / 1.0))
             hcrop = max(1, int(self.ban.height * p))
-            frame.alpha_composite(self.ban.crop((0, 0, self.ban.width, hcrop)), (W - self.ban.width - 70, 110))
+            frame.alpha_composite(self.ban.crop((0, 0, self.ban.width, hcrop)), (W - self.ban.width - 70, self.view_y + 110))
             if self.credits is not None:
-                paste_center(frame, self.credits, W - 70 - self.ban.width / 2, 110 + self.ban.height + 60, alpha=p)
+                paste_center(frame, self.credits, W - 70 - self.ban.width / 2, self.view_y + 110 + self.ban.height + 60, alpha=p)
         for li_, j, ch, p, la, dt in P.lyric_state(t):
             if p <= 0:
                 continue
@@ -498,7 +499,7 @@ class Style:
             step = min(124, 1000 / nn)
             ts = int(min(112, step * 0.9))
             x = W / 2 + (j - (nn - 1) / 2) * step
-            y = 1735
+            y = self.view_y + self.P.OH - 185
             pe = eout(p)
             rot = (1 - pe) * (25 if j % 2 else -25) + (2 if j % 2 else -2)
             paste_center(frame, self.tile_sh, x + 6, y + 10, alpha=pe * la, scale=(1.4 - 0.4 * pe) * ts / 112, rot=rot)
@@ -508,4 +509,4 @@ class Style:
             ts, te = 1.5, max(3.0, P.t0 - 0.2)
         if self.tag is not None and ts < t < te:
             p = eout((t - ts) / 0.8) * (1 - ease((t - te + 0.7) / 0.7))
-            paste_center(frame, self.tag, W / 2, 1760 + 20 * (1 - p), alpha=p)
+            paste_center(frame, self.tag, W / 2, self.view_y + self.P.OH - 160 + 20 * (1 - p), alpha=p)
