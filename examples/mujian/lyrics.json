@@ -1,0 +1,1499 @@
+{
+ "lines": [
+  {
+   "text": "他们笑我这把木剑",
+   "section": "Verse 1: Playful Confidence",
+   "times": [
+    10.78,
+    11.1,
+    11.42,
+    11.96,
+    12.34,
+    12.62,
+    12.76,
+    13.12
+   ],
+   "end": 13.42,
+   "conf": 1.0
+  },
+  {
+   "text": "也敢拿来挡住苍天",
+   "section": "Verse 1: Playful Confidence",
+   "times": [
+    13.78,
+    14.12,
+    14.44,
+    14.86,
+    15.28,
+    15.44,
+    15.6,
+    15.84
+   ],
+   "end": 16.22,
+   "conf": 1.0
+  },
+  {
+   "text": "我说神力还没醒",
+   "section": "Verse 1: Playful Confidence",
+   "times": [
+    16.82,
+    17.18,
+    17.36,
+    17.66,
+    18.0,
+    18.3,
+    18.88
+   ],
+   "end": 19.18,
+   "conf": 0.86
+  },
+  {
+   "text": "先替天公管点人间",
+   "section": "Verse 1: Playful Confidence",
+   "times": [
+    19.49,
+    19.8,
+    20.06,
+    20.24,
+    20.44,
+    20.78,
+    21.14,
+    21.4
+   ],
+   "end": 21.9,
+   "conf": 1.0
+  },
+  {
+   "text": "袖里藏着半包火药",
+   "section": "Verse 1: Playful Confidence",
+   "times": [
+    22.16,
+    22.52,
+    22.94,
+    23.24,
+    23.4,
+    23.7,
+    24.04,
+    24.32
+   ],
+   "end": 24.72,
+   "conf": 0.88
+  },
+  {
+   "text": "掌心藏着一截红线",
+   "section": "Verse 1: Playful Confidence",
+   "times": [
+    25.2,
+    25.44,
+    25.78,
+    26.1,
+    26.26,
+    26.6,
+    26.84,
+    27.16
+   ],
+   "end": 27.58,
+   "conf": 1.0
+  },
+  {
+   "text": "一声雷响吓跑山贼",
+   "section": "Verse 1: Playful Confidence",
+   "times": [
+    27.86,
+    28.26,
+    28.62,
+    28.94,
+    29.3,
+    29.62,
+    29.78,
+    30.13
+   ],
+   "end": 30.43,
+   "conf": 0.88
+  },
+  {
+   "text": "全村喊我活神仙",
+   "section": "Verse 1: Playful Confidence",
+   "times": [
+    30.66,
+    31.08,
+    31.43,
+    31.78,
+    32.1,
+    32.5,
+    32.86
+   ],
+   "end": 33.22,
+   "conf": 0.86
+  },
+  {
+   "text": "孩子追着问我姓名",
+   "section": "Verse 2: Warm Storytelling",
+   "times": [
+    33.35,
+    33.75,
+    34.28,
+    34.61,
+    34.94,
+    35.3,
+    35.4,
+    35.66
+   ],
+   "end": 36.09,
+   "conf": 0.88
+  },
+  {
+   "text": "我说天机不可外传",
+   "section": "Verse 2: Warm Storytelling",
+   "times": [
+    36.14,
+    36.52,
+    36.9,
+    37.44,
+    37.72,
+    38.08,
+    38.28,
+    38.54
+   ],
+   "end": 38.84,
+   "conf": 1.0
+  },
+  {
+   "text": "他把热饼塞进我手",
+   "section": "Verse 2: Warm Storytelling",
+   "times": [
+    39.55,
+    39.86,
+    40.02,
+    40.3,
+    40.58,
+    40.9,
+    41.06,
+    41.3
+   ],
+   "end": 41.69,
+   "conf": 1.0
+  },
+  {
+   "text": "说神仙也要吃晚饭",
+   "section": "Verse 2: Warm Storytelling",
+   "times": [
+    41.74,
+    42.08,
+    42.36,
+    42.68,
+    43.1,
+    43.44,
+    43.78,
+    44.12
+   ],
+   "end": 44.62,
+   "conf": 1.0
+  },
+  {
+   "text": "村口悬着一座吊桥",
+   "section": "Verse 2: Warm Storytelling",
+   "times": [
+    45.12,
+    45.48,
+    45.64,
+    45.96,
+    46.28,
+    46.6,
+    46.7,
+    46.98
+   ],
+   "end": 47.3,
+   "conf": 0.88
+  },
+  {
+   "text": "桥下深渊望不见边",
+   "section": "Verse 2: Warm Storytelling",
+   "times": [
+    47.6,
+    47.94,
+    48.34,
+    48.68,
+    48.84,
+    49.06,
+    49.4,
+    49.62
+   ],
+   "end": 49.94,
+   "conf": 1.0
+  },
+  {
+   "text": "他问妖怪来了怎办",
+   "section": "Verse 2: Warm Storytelling",
+   "times": [
+    50.58,
+    50.92,
+    51.2,
+    51.54,
+    51.84,
+    52.06,
+    52.28,
+    52.61
+   ],
+   "end": 52.91,
+   "conf": 1.0
+  },
+  {
+   "text": "我说别怕有我在前",
+   "section": "Verse 2: Warm Storytelling",
+   "times": [
+    53.46,
+    53.63,
+    53.8,
+    54.3,
+    54.58,
+    54.84,
+    55.03,
+    55.22
+   ],
+   "end": 55.86,
+   "conf": 1.0
+  },
+  {
+   "text": "我若不是神仙",
+   "section": "Chorus: Bold and Confident",
+   "times": [
+    55.98,
+    56.52,
+    56.88,
+    57.33,
+    57.78,
+    58.26
+   ],
+   "end": 58.6,
+   "conf": 1.0
+  },
+  {
+   "text": "谁敢站在前面",
+   "section": "Chorus: Bold and Confident",
+   "times": [
+    59.08,
+    59.3,
+    59.64,
+    60.06,
+    60.44,
+    60.95
+   ],
+   "end": 61.25,
+   "conf": 0.83
+  },
+  {
+   "text": "一把木剑一身破衫",
+   "section": "Chorus: Bold and Confident",
+   "times": [
+    61.81,
+    62.18,
+    62.5,
+    62.82,
+    63.14,
+    63.44,
+    63.58,
+    63.82
+   ],
+   "end": 64.22,
+   "conf": 1.0
+  },
+  {
+   "text": "也敢替你挡住黑天",
+   "section": "Chorus: Bold and Confident",
+   "times": [
+    64.32,
+    64.48,
+    64.64,
+    64.9,
+    65.26,
+    65.64,
+    66.14,
+    66.66
+   ],
+   "end": 67.02,
+   "conf": 1.0
+  },
+  {
+   "text": "等我唤醒满身雷电",
+   "section": "Chorus: Bold and Confident",
+   "times": [
+    67.3,
+    67.66,
+    68.06,
+    68.38,
+    68.66,
+    68.92,
+    69.18,
+    69.52
+   ],
+   "end": 69.82,
+   "conf": 1.0
+  },
+  {
+   "text": "叫那妖邪跪在山前",
+   "section": "Chorus: Bold and Confident",
+   "times": [
+    70.28,
+    70.5,
+    70.84,
+    71.2,
+    71.46,
+    71.66,
+    71.98,
+    72.26
+   ],
+   "end": 72.66,
+   "conf": 1.0
+  },
+  {
+   "text": "你只管把饭煮好",
+   "section": "Chorus: Bold and Confident",
+   "times": [
+    72.89,
+    73.3,
+    73.64,
+    74.0,
+    74.34,
+    74.74,
+    74.96
+   ],
+   "end": 75.48,
+   "conf": 1.0
+  },
+  {
+   "text": "等我回来再添一碗",
+   "section": "Chorus: Bold and Confident",
+   "times": [
+    75.88,
+    76.08,
+    76.46,
+    76.71,
+    76.96,
+    77.24,
+    77.56,
+    77.98
+   ],
+   "end": 78.76,
+   "conf": 1.0
+  },
+  {
+   "text": "那夜黑风翻过山岗",
+   "section": "Verse 3: Dark, Urgent, Heavy Drums",
+   "times": [
+    81.68,
+    82.0,
+    82.16,
+    82.4,
+    82.74,
+    83.04,
+    83.18,
+    83.48
+   ],
+   "end": 83.86,
+   "conf": 1.0
+  },
+  {
+   "text": "符纸燃尽化作青烟",
+   "section": "Verse 3: Dark, Urgent, Heavy Drums",
+   "times": [
+    84.09,
+    84.41,
+    84.96,
+    85.26,
+    85.5,
+    85.86,
+    86.0,
+    86.24
+   ],
+   "end": 86.7,
+   "conf": 0.88
+  },
+  {
+   "text": "我把火药点在坛前",
+   "section": "Verse 3: Dark, Urgent, Heavy Drums",
+   "times": [
+    87.22,
+    87.6,
+    87.76,
+    88.08,
+    88.46,
+    88.68,
+    89.08,
+    89.4
+   ],
+   "end": 89.73,
+   "conf": 1.0
+  },
+  {
+   "text": "只有几点微光明灭",
+   "section": "Verse 3: Dark, Urgent, Heavy Drums",
+   "times": [
+    89.78,
+    90.1,
+    90.42,
+    90.78,
+    91.0,
+    91.26,
+    91.54,
+    91.84
+   ],
+   "end": 92.34,
+   "conf": 1.0
+  },
+  {
+   "text": "邪魔一脚踏碎神坛",
+   "section": "Verse 3: Dark, Urgent, Heavy Drums",
+   "times": [
+    92.51,
+    92.86,
+    93.38,
+    93.64,
+    94.0,
+    94.28,
+    94.42,
+    94.72
+   ],
+   "end": 95.1,
+   "conf": 0.88
+  },
+  {
+   "text": "妖影森然侵入庭院",
+   "section": "Verse 3: Dark, Urgent, Heavy Drums",
+   "times": [
+    95.24,
+    95.58,
+    96.06,
+    96.32,
+    96.6,
+    96.88,
+    97.16,
+    97.48
+   ],
+   "end": 97.9,
+   "conf": 0.75
+  },
+  {
+   "text": "我横剑独立门前",
+   "section": "Verse 3: Dark, Urgent, Heavy Drums",
+   "times": [
+    98.3,
+    98.64,
+    98.82,
+    99.0,
+    99.28,
+    99.62,
+    100.18
+   ],
+   "end": 100.68,
+   "conf": 1.0
+  },
+  {
+   "text": "背上鲜血浸透衣衫",
+   "section": "Verse 3: Dark, Urgent, Heavy Drums",
+   "times": [
+    100.94,
+    101.32,
+    101.7,
+    101.96,
+    102.26,
+    102.5,
+    102.84,
+    103.18
+   ],
+   "end": 103.48,
+   "conf": 1.0
+  },
+  {
+   "text": "待到天明风声渐歇",
+   "section": "Verse 4: Wounded, Fragile, Sparse Piano",
+   "times": [
+    104.16,
+    104.44,
+    104.62,
+    104.86,
+    105.16,
+    105.48,
+    105.7,
+    105.9
+   ],
+   "end": 106.2,
+   "conf": 1.0
+  },
+  {
+   "text": "我已伤卧草榻之间",
+   "section": "Verse 4: Wounded, Fragile, Sparse Piano",
+   "times": [
+    106.64,
+    106.98,
+    107.32,
+    107.6,
+    107.88,
+    108.3,
+    108.48,
+    108.74
+   ],
+   "end": 109.12,
+   "conf": 1.0
+  },
+  {
+   "text": "孩子守在榻边",
+   "section": "Verse 4: Wounded, Fragile, Sparse Piano",
+   "times": [
+    109.84,
+    110.01,
+    110.18,
+    110.54,
+    110.94,
+    111.54
+   ],
+   "end": 111.9,
+   "conf": 1.0
+  },
+  {
+   "text": "他将红线递到跟前",
+   "section": "Verse 4: Wounded, Fragile, Sparse Piano",
+   "times": [
+    112.3,
+    112.64,
+    112.92,
+    113.24,
+    113.48,
+    113.74,
+    114.02,
+    114.34
+   ],
+   "end": 114.68,
+   "conf": 1.0
+  },
+  {
+   "text": "红线缠了一遍一遍",
+   "section": "Verse 4: Wounded, Fragile, Sparse Piano",
+   "times": [
+    115.08,
+    115.42,
+    115.72,
+    116.08,
+    116.42,
+    116.76,
+    116.92,
+    117.26
+   ],
+   "end": 117.76,
+   "conf": 1.0
+  },
+  {
+   "text": "也换不来神力乍现",
+   "section": "Verse 4: Wounded, Fragile, Sparse Piano",
+   "times": [
+    117.82,
+    118.18,
+    118.48,
+    118.8,
+    119.1,
+    119.4,
+    119.7,
+    119.96
+   ],
+   "end": 120.32,
+   "conf": 0.88
+  },
+  {
+   "text": "他说纸鹤尚能飞远",
+   "section": "Verse 4: Wounded, Fragile, Sparse Piano",
+   "times": [
+    121.0,
+    121.28,
+    121.44,
+    121.68,
+    122.04,
+    122.27,
+    122.5,
+    122.78
+   ],
+   "end": 123.14,
+   "conf": 0.88
+  },
+  {
+   "text": "我却无颜与他相见",
+   "section": "Verse 4: Wounded, Fragile, Sparse Piano",
+   "times": [
+    123.46,
+    123.8,
+    124.16,
+    124.5,
+    124.72,
+    124.98,
+    125.22,
+    125.64
+   ],
+   "end": 125.94,
+   "conf": 1.0
+  },
+  {
+   "text": "我若真是神仙",
+   "section": "Chorus: Vulnerable, Desperate Hope",
+   "times": [
+    126.34,
+    126.68,
+    127.02,
+    127.54,
+    128.02,
+    128.4
+   ],
+   "end": 128.76,
+   "conf": 1.0
+  },
+  {
+   "text": "为何还会胆寒",
+   "section": "Chorus: Vulnerable, Desperate Hope",
+   "times": [
+    129.08,
+    129.42,
+    129.78,
+    130.34,
+    130.82,
+    131.2
+   ],
+   "end": 131.52,
+   "conf": 1.0
+  },
+  {
+   "text": "为何一道小小伤口",
+   "section": "Chorus: Vulnerable, Desperate Hope",
+   "times": [
+    131.86,
+    132.18,
+    132.68,
+    133.04,
+    133.28,
+    133.56,
+    133.72,
+    133.98
+   ],
+   "end": 134.38,
+   "conf": 1.0
+  },
+  {
+   "text": "疼得我整夜不能眠",
+   "section": "Chorus: Vulnerable, Desperate Hope",
+   "times": [
+    134.43,
+    134.8,
+    135.08,
+    135.42,
+    135.76,
+    136.16,
+    136.37,
+    136.58
+   ],
+   "end": 137.12,
+   "conf": 0.88
+  },
+  {
+   "text": "也许再等一道雷电",
+   "section": "Chorus: Vulnerable, Desperate Hope",
+   "times": [
+    137.44,
+    137.82,
+    138.18,
+    138.54,
+    138.86,
+    139.18,
+    139.38,
+    139.62
+   ],
+   "end": 139.92,
+   "conf": 1.0
+  },
+  {
+   "text": "也许还差一次磨练",
+   "section": "Chorus: Vulnerable, Desperate Hope",
+   "times": [
+    140.25,
+    140.62,
+    140.92,
+    141.3,
+    141.66,
+    141.88,
+    142.1,
+    142.42
+   ],
+   "end": 142.82,
+   "conf": 1.0
+  },
+  {
+   "text": "我把破剑握得更紧",
+   "section": "Chorus: Vulnerable, Desperate Hope",
+   "times": [
+    143.06,
+    143.42,
+    143.82,
+    144.22,
+    144.44,
+    144.65,
+    144.86,
+    145.24
+   ],
+   "end": 145.6,
+   "conf": 1.0
+  },
+  {
+   "text": "不敢松开最后一点",
+   "section": "Chorus: Vulnerable, Desperate Hope",
+   "times": [
+    145.96,
+    146.28,
+    146.58,
+    146.86,
+    147.18,
+    147.4,
+    147.7,
+    148.02
+   ],
+   "end": 148.34,
+   "conf": 1.0
+  },
+  {
+   "text": "天亮有人上山查看",
+   "section": "Verse 5: Growing Dread",
+   "times": [
+    150.44,
+    150.72,
+    150.92,
+    151.13,
+    151.34,
+    151.84,
+    152.12,
+    152.38
+   ],
+   "end": 152.78,
+   "conf": 1.0
+  },
+  {
+   "text": "遍地脚印绕过火焰",
+   "section": "Verse 5: Growing Dread",
+   "times": [
+    152.9,
+    153.24,
+    153.58,
+    153.92,
+    154.2,
+    154.46,
+    154.74,
+    155.02
+   ],
+   "end": 155.44,
+   "conf": 1.0
+  },
+  {
+   "text": "它们原来只怕亮光",
+   "section": "Verse 5: Growing Dread",
+   "times": [
+    156.12,
+    156.28,
+    156.44,
+    156.72,
+    157.14,
+    157.42,
+    157.82,
+    158.12
+   ],
+   "end": 158.51,
+   "conf": 1.0
+  },
+  {
+   "text": "躲进林中等着夜晚",
+   "section": "Verse 5: Growing Dread",
+   "times": [
+    158.56,
+    158.9,
+    159.22,
+    159.5,
+    159.92,
+    160.2,
+    160.4,
+    160.7
+   ],
+   "end": 161.06,
+   "conf": 1.0
+  },
+  {
+   "text": "我翻遍了残破天书",
+   "section": "Verse 5: Growing Dread",
+   "times": [
+    161.41,
+    161.76,
+    162.06,
+    162.34,
+    162.64,
+    162.94,
+    163.16,
+    163.42
+   ],
+   "end": 163.73,
+   "conf": 1.0
+  },
+  {
+   "text": "末页写着戏法三篇",
+   "section": "Verse 5: Growing Dread",
+   "times": [
+    163.78,
+    164.12,
+    164.8,
+    165.14,
+    165.38,
+    165.76,
+    165.96,
+    166.24
+   ],
+   "end": 166.62,
+   "conf": 1.0
+  },
+  {
+   "text": "引雷不过硝石一把",
+   "section": "Verse 5: Growing Dread",
+   "times": [
+    167.26,
+    167.5,
+    167.74,
+    167.96,
+    168.24,
+    168.66,
+    168.98,
+    169.36
+   ],
+   "end": 169.61,
+   "conf": 0.88
+  },
+  {
+   "text": "飞剑不过细丝一线",
+   "section": "Verse 5: Growing Dread",
+   "times": [
+    169.66,
+    170.08,
+    170.42,
+    170.8,
+    170.98,
+    171.34,
+    171.58,
+    172.04
+   ],
+   "end": 172.34,
+   "conf": 0.88
+  },
+  {
+   "text": "我松开那根线",
+   "section": "Breakdown: Bare Voice, Sparse Piano, Despair",
+   "times": [
+    172.6,
+    173.06,
+    173.58,
+    174.02,
+    174.34,
+    174.66
+   ],
+   "end": 175.02,
+   "conf": 1.0
+  },
+  {
+   "text": "木剑落在我的脚边",
+   "section": "Breakdown: Bare Voice, Sparse Piano, Despair",
+   "times": [
+    175.47,
+    175.78,
+    176.04,
+    176.44,
+    176.74,
+    176.96,
+    177.18,
+    177.44
+   ],
+   "end": 177.8,
+   "conf": 1.0
+  },
+  {
+   "text": "没有祥云前来接我",
+   "section": "Breakdown: Bare Voice, Sparse Piano, Despair",
+   "times": [
+    177.85,
+    178.22,
+    178.64,
+    179.22,
+    179.58,
+    179.84,
+    180.02,
+    180.22
+   ],
+   "end": 180.69,
+   "conf": 1.0
+  },
+  {
+   "text": "只有风吹那本残卷",
+   "section": "Breakdown: Bare Voice, Sparse Piano, Despair",
+   "times": [
+    180.74,
+    181.13,
+    181.52,
+    182.02,
+    182.34,
+    182.68,
+    182.82,
+    183.1
+   ],
+   "end": 183.42,
+   "conf": 1.0
+  },
+  {
+   "text": "不曾有过什么天命",
+   "section": "Breakdown: Bare Voice, Sparse Piano, Despair",
+   "times": [
+    183.74,
+    184.12,
+    184.5,
+    184.84,
+    185.14,
+    185.43,
+    185.72,
+    186.07
+   ],
+   "end": 186.37,
+   "conf": 0.88
+  },
+  {
+   "text": "从未有过神仙出现",
+   "section": "Breakdown: Bare Voice, Sparse Piano, Despair",
+   "times": [
+    186.53,
+    186.9,
+    187.26,
+    187.66,
+    187.98,
+    188.28,
+    188.42,
+    188.68
+   ],
+   "end": 189.12,
+   "conf": 1.0
+  },
+  {
+   "text": "他们把命交给了我",
+   "section": "Breakdown: Bare Voice, Sparse Piano, Despair",
+   "times": [
+    189.17,
+    189.54,
+    189.96,
+    190.48,
+    190.8,
+    191.1,
+    191.28,
+    191.52
+   ],
+   "end": 191.94,
+   "conf": 1.0
+  },
+  {
+   "text": "我拿什么还给人间",
+   "section": "Breakdown: Bare Voice, Sparse Piano, Despair",
+   "times": [
+    192.26,
+    192.58,
+    192.86,
+    193.08,
+    193.3,
+    193.8,
+    194.06,
+    194.34
+   ],
+   "end": 194.64,
+   "conf": 0.88
+  },
+  {
+   "text": "我趁黄昏收好行囊",
+   "section": "Bridge: Quiet, Hesitant",
+   "times": [
+    194.8,
+    195.21,
+    195.8,
+    196.1,
+    196.38,
+    196.76,
+    197.1,
+    197.44
+   ],
+   "end": 197.73,
+   "conf": 0.62
+  },
+  {
+   "text": "想从后山逃得远远",
+   "section": "Bridge: Quiet, Hesitant",
+   "times": [
+    197.78,
+    198.12,
+    198.5,
+    198.88,
+    199.26,
+    199.56,
+    199.72,
+    199.98
+   ],
+   "end": 200.97,
+   "conf": 0.88
+  },
+  {
+   "text": "却见家家搀老抱小",
+   "section": "Bridge: Quiet, Hesitant",
+   "times": [
+    201.02,
+    201.28,
+    201.48,
+    201.78,
+    202.11,
+    202.44,
+    202.74,
+    202.98
+   ],
+   "end": 203.31,
+   "conf": 0.88
+  },
+  {
+   "text": "挤在桥头不敢向前",
+   "section": "Bridge: Quiet, Hesitant",
+   "times": [
+    203.36,
+    203.74,
+    204.22,
+    204.54,
+    204.9,
+    205.22,
+    205.36,
+    205.62
+   ],
+   "end": 205.99,
+   "conf": 0.88
+  },
+  {
+   "text": "孩子没有求我施法",
+   "section": "Bridge: Quiet, Hesitant",
+   "times": [
+    206.04,
+    206.47,
+    206.9,
+    207.23,
+    207.56,
+    208.06,
+    208.44,
+    208.74
+   ],
+   "end": 209.14,
+   "conf": 1.0
+  },
+  {
+   "text": "只把热饼递到跟前",
+   "section": "Bridge: Quiet, Hesitant",
+   "times": [
+    209.19,
+    209.54,
+    209.84,
+    210.26,
+    210.52,
+    210.76,
+    211.04,
+    211.36
+   ],
+   "end": 211.7,
+   "conf": 1.0
+  },
+  {
+   "text": "我沉默地站在桥前",
+   "section": "Build: Resolve Awakens, Strings and Drums Slowly Rise",
+   "times": [
+    212.13,
+    212.5,
+    212.82,
+    213.2,
+    213.54,
+    213.84,
+    214.14,
+    214.4
+   ],
+   "end": 214.78,
+   "conf": 1.0
+  },
+  {
+   "text": "任晚风吹过双肩",
+   "section": "Build: Resolve Awakens, Strings and Drums Slowly Rise",
+   "times": [
+    214.83,
+    215.26,
+    215.64,
+    216.08,
+    216.5,
+    216.78,
+    217.06
+   ],
+   "end": 217.42,
+   "conf": 0.86
+  },
+  {
+   "text": "我低头吃完那张饼",
+   "section": "Build: Resolve Awakens, Strings and Drums Slowly Rise",
+   "times": [
+    217.47,
+    217.9,
+    218.14,
+    218.5,
+    218.86,
+    219.24,
+    219.64,
+    219.9
+   ],
+   "end": 220.26,
+   "conf": 1.0
+  },
+  {
+   "text": "把剩下的火药点燃",
+   "section": "Build: Resolve Awakens, Strings and Drums Slowly Rise",
+   "times": [
+    220.33,
+    220.7,
+    220.98,
+    221.3,
+    221.46,
+    221.82,
+    222.44,
+    222.74
+   ],
+   "end": 223.36,
+   "conf": 1.0
+  },
+  {
+   "text": "这回没有神仙",
+   "section": "Crescendo: Restrained Start, Rising Pitch and Intensity",
+   "times": [
+    223.73,
+    224.16,
+    224.58,
+    224.94,
+    225.3,
+    225.62
+   ],
+   "end": 225.89,
+   "conf": 1.0
+  },
+  {
+   "text": "只有我站在你们前面",
+   "section": "Crescendo: Continue Rising, Full-Voice Release, Sustain Final Word",
+   "times": [
+    225.94,
+    226.26,
+    226.58,
+    227.02,
+    227.38,
+    227.82,
+    227.96,
+    228.1,
+    228.44
+   ],
+   "end": 229.19,
+   "conf": 1.0
+  },
+  {
+   "text": "我虽不是神仙",
+   "section": "Chorus: Full Band, Powerful, Tragic Resolve",
+   "times": [
+    229.24,
+    229.5,
+    229.84,
+    230.3,
+    230.76,
+    231.32
+   ],
+   "end": 231.68,
+   "conf": 1.0
+  },
+  {
+   "text": "也能站在前面",
+   "section": "Chorus: Full Band, Powerful, Tragic Resolve",
+   "times": [
+    231.95,
+    232.38,
+    232.74,
+    233.16,
+    233.52,
+    233.84
+   ],
+   "end": 234.88,
+   "conf": 1.0
+  },
+  {
+   "text": "一把木剑一身破衫",
+   "section": "Chorus: Full Band, Powerful, Tragic Resolve",
+   "times": [
+    234.95,
+    235.3,
+    235.62,
+    235.94,
+    236.3,
+    236.54,
+    236.7,
+    236.96
+   ],
+   "end": 237.29,
+   "conf": 1.0
+  },
+  {
+   "text": "曾经骗过多少双眼",
+   "section": "Chorus: Full Band, Powerful, Tragic Resolve",
+   "times": [
+    237.34,
+    237.6,
+    237.8,
+    238.0,
+    238.42,
+    238.78,
+    239.14,
+    239.74
+   ],
+   "end": 240.24,
+   "conf": 1.0
+  },
+  {
+   "text": "没有雷霆应我召唤",
+   "section": "Chorus: Full Band, Powerful, Tragic Resolve",
+   "times": [
+    240.51,
+    240.88,
+    241.26,
+    241.6,
+    241.9,
+    242.22,
+    242.38,
+    242.64
+   ],
+   "end": 242.98,
+   "conf": 0.88
+  },
+  {
+   "text": "没有飞剑替我向前",
+   "section": "Chorus: Full Band, Powerful, Tragic Resolve",
+   "times": [
+    243.08,
+    243.45,
+    243.92,
+    244.24,
+    244.7,
+    244.94,
+    245.22,
+    245.52
+   ],
+   "end": 245.94,
+   "conf": 1.0
+  },
+  {
+   "text": "你领众人渡过桥去",
+   "section": "Chorus: Full Band, Powerful, Tragic Resolve",
+   "times": [
+    246.35,
+    246.64,
+    246.86,
+    247.24,
+    247.86,
+    247.92,
+    248.08,
+    248.34
+   ],
+   "end": 248.8,
+   "conf": 0.88
+  },
+  {
+   "text": "那碗饭也不用再添",
+   "section": "Chorus: Full Band, Powerful, Tragic Resolve",
+   "times": [
+    248.97,
+    249.34,
+    249.74,
+    250.12,
+    250.4,
+    250.62,
+    250.84,
+    251.18
+   ],
+   "end": 251.76,
+   "conf": 1.0
+  },
+  {
+   "text": "神仙在此",
+   "section": "Powerful theatrical falsetto, soaring, heroic, explosive climax",
+   "times": [
+    255.37,
+    255.92,
+    256.48,
+    256.84
+   ],
+   "end": 257.36,
+   "conf": 1.0
+  },
+  {
+   "text": "谁敢向前",
+   "section": "Powerful theatrical falsetto, soaring, heroic, explosive climax",
+   "times": [
+    258.24,
+    258.76,
+    259.28,
+    259.68
+   ],
+   "end": 260.2,
+   "conf": 0.75
+  },
+  {
+   "text": "有胆就来",
+   "section": "Powerful theatrical falsetto, soaring, heroic, explosive climax",
+   "times": [
+    261.05,
+    261.6,
+    262.12,
+    262.52
+   ],
+   "end": 263.36,
+   "conf": 1.0
+  },
+  {
+   "text": "取我命还",
+   "section": "Powerful theatrical falsetto, soaring, heroic, explosive climax",
+   "times": [
+    263.82,
+    264.4,
+    265.04,
+    265.36
+   ],
+   "end": 266.68,
+   "conf": 1.0
+  },
+  {
+   "text": "后来村口立了石像",
+   "section": "Outro: Gentle Natural Voice, Sparse Erhu and Piano",
+   "times": [
+    270.73,
+    271.14,
+    271.5,
+    271.82,
+    272.3,
+    272.58,
+    272.84,
+    273.2
+   ],
+   "end": 273.66,
+   "conf": 1.0
+  },
+  {
+   "text": "一碗热饭摆在像前",
+   "section": "Outro: Gentle Natural Voice, Sparse Erhu and Piano",
+   "times": [
+    273.86,
+    274.24,
+    274.56,
+    274.9,
+    275.22,
+    275.62,
+    275.82,
+    276.14
+   ],
+   "end": 276.54,
+   "conf": 1.0
+  },
+  {
+   "text": "人人说他法力无边",
+   "section": "Outro: Gentle Natural Voice, Sparse Erhu and Piano",
+   "times": [
+    276.83,
+    277.26,
+    277.66,
+    278.02,
+    278.38,
+    278.74,
+    278.94,
+    279.3
+   ],
+   "end": 279.57,
+   "conf": 1.0
+  },
+  {
+   "text": "只身挡下一场霜寒",
+   "section": "Outro: Gentle Natural Voice, Sparse Erhu and Piano",
+   "times": [
+    279.62,
+    279.98,
+    280.34,
+    280.76,
+    281.06,
+    281.36,
+    281.86,
+    282.24
+   ],
+   "end": 282.82,
+   "conf": 0.88
+  },
+  {
+   "text": "风吹木剑响空山",
+   "section": "Outro: Gentle Natural Voice, Sparse Erhu and Piano",
+   "times": [
+    283.44,
+    283.82,
+    284.04,
+    284.34,
+    284.66,
+    285.02,
+    285.46
+   ],
+   "end": 285.94,
+   "conf": 1.0
+  },
+  {
+   "text": "月落桥头霜满肩",
+   "section": "Outro: Gentle Natural Voice, Sparse Erhu and Piano",
+   "times": [
+    286.16,
+    286.62,
+    286.98,
+    287.36,
+    287.82,
+    288.14,
+    288.62
+   ],
+   "end": 289.1,
+   "conf": 1.0
+  },
+  {
+   "text": "无人知他去了哪边",
+   "section": "Outro: Gentle Natural Voice, Sparse Erhu and Piano",
+   "times": [
+    289.56,
+    289.94,
+    290.26,
+    290.62,
+    291.04,
+    291.27,
+    291.5,
+    291.94
+   ],
+   "end": 292.4,
+   "conf": 1.0
+  },
+  {
+   "text": "炊烟又起在人间",
+   "section": "Outro: Gentle Natural Voice, Sparse Erhu and Piano",
+   "times": [
+    292.45,
+    293.1,
+    293.7,
+    294.12,
+    294.54,
+    295.08,
+    297.04
+   ],
+   "end": 297.84,
+   "conf": 0.86
+  }
+ ]
+}

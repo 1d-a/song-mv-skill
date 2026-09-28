@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+projects/
+examples/*/build/
+examples/*/out/
+examples/*/features.npz
+examples/*/*.mp3
+examples/*/*.wav
