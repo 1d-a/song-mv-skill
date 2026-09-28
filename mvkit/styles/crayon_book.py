@@ -92,6 +92,10 @@ class Book:
                     for h in [f['at']] + f.get('hits', []):
                         self.impacts.append((h, f['k'], f.get('amp', 1.0)))
 
+    def transition(self, si):
+        """shot's `tr` (fade/dissolve/iris/zoom/flash); unset -> rotate dissolve/iris/fade/zoom"""
+        return self.shots[si].get('tr') or ('dissolve', 'iris', 'fade', 'zoom')[si % 4]
+
     def shot_at(self, t):
         return max(0, int(np.searchsorted(self.starts, t, 'right')) - 1)
 
