@@ -267,9 +267,13 @@ class Project:
         self.seal = cfg.get('seal', '')
         self.dur = float(cfg.get('duration') or audio_duration(self.audio))
         fp = os.path.join(self.dir, 'features.npz')
-        if not os.path.exists(fp):
-            np.savez(fp, **compute_features(self.audio, self.dur))
-        self.F = {k: v for k, v in np.load(fp).items()}
+        st = os.stat(self.audio)
+        sig = np.array([st.st_size, st.st_mtime, self.dur])
+        F = dict(np.load(fp).items()) if os.path.exists(fp) else {}
+        if 'sig' not in F or not np.allclose(F['sig'], sig):
+            F = dict(compute_features(self.audio, self.dur), sig=sig)
+            np.savez(fp, **F)
+        self.F = F
         self.drop = float(cfg.get('drop', self.F['drop']))
         lp = os.path.join(self.dir, 'lyrics.json')
         self.lines = json.load(open(lp, encoding='utf-8'))['lines'] if os.path.exists(lp) else []

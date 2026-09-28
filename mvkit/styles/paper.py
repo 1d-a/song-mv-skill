@@ -504,6 +504,8 @@ class Style:
             paste_center(frame, self.tile_sh, x + 6, y + 10, alpha=pe * la, scale=(1.4 - 0.4 * pe) * ts / 112, rot=rot)
             paste_center(frame, self.char_tile(ch, ts), x, y - 30 * (1 - pe), alpha=pe * la, scale=1.4 - 0.4 * pe, rot=rot)
         ts, te = P.drop + 0.3, P.t0 - 0.3
-        if self.tag is not None and te - ts > 1.5 and ts < t < te:
+        if te - ts <= 1.5:
+            ts, te = 1.5, max(3.0, P.t0 - 0.2)
+        if self.tag is not None and ts < t < te:
             p = eout((t - ts) / 0.8) * (1 - ease((t - te + 0.7) / 0.7))
             paste_center(frame, self.tag, W / 2, 1760 + 20 * (1 - p), alpha=p)

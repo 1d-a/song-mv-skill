@@ -5,6 +5,8 @@ python -m mvkit.render PROJECT --style ink --stills 12.5,20,31 --sheet out.png  
 Chunks are cached in PROJECT/build/<style>/ so an interrupted render resumes.
 """
 import argparse
+import glob
+import hashlib
 import os
 import subprocess
 import sys
@@ -51,10 +53,22 @@ def encode(frames_iter, path):
     os.replace(tmp, path)
 
 
+def build_dir(P, style):
+    h = hashlib.sha1()
+    root = os.path.dirname(os.path.abspath(__file__))
+    for f in ['project.json', 'lyrics.json', 'storyboard.json', 'features.npz']:
+        fp = os.path.join(P.dir, f)
+        if os.path.exists(fp):
+            h.update(open(fp, 'rb').read())
+    for f in sorted(glob.glob(os.path.join(root, '*.py')) + glob.glob(os.path.join(root, 'styles', '*.py'))):
+        h.update(open(f, 'rb').read())
+    return os.path.join(P.dir, 'build', style, h.hexdigest()[:10])
+
+
 def worker(pdir, style, chunks, f0, f1):
     P = Project(pdir)
     S = load_style(style, P)
-    bdir = os.path.join(P.dir, 'build', style)
+    bdir = build_dir(P, style)
     for c in chunks:
         a, b = max(f0, c * CHUNK), min(f1, (c + 1) * CHUNK)
         path = os.path.join(bdir, f'chunk_{c:04d}_{a}_{b}.mp4')
@@ -69,7 +83,7 @@ def render(pdir, style, start=0.0, dur=None, jobs=2, out=None):
     P = Project(pdir)
     dur = P.dur - start if dur is None else min(dur, P.dur - start)
     f0, f1 = int(round(start * FPS)), int(round((start + dur) * FPS))
-    bdir = os.path.join(P.dir, 'build', style)
+    bdir = build_dir(P, style)
     os.makedirs(bdir, exist_ok=True)
     chunks = list(range(f0 // CHUNK, (f1 - 1) // CHUNK + 1))
     groups = [chunks[i::jobs] for i in range(jobs) if chunks[i::jobs]]
@@ -105,6 +119,7 @@ def stills(pdir, style, times, sheet=None, cols=4, S=None, P=None, label=True):
         sh = Image.new('RGB', (cols * tw + (cols + 1) * 12, rows * th + (rows + 1) * 12), (24, 24, 28))
         for k, im in enumerate(ims):
             sh.paste(im.resize((tw, th), Image.LANCZOS), (12 + (k % cols) * (tw + 12), 12 + (k // cols) * (th + 12)))
+        os.makedirs(os.path.dirname(os.path.abspath(sheet)), exist_ok=True)
         sh.save(sheet)
         print('wrote', sheet)
     return ims

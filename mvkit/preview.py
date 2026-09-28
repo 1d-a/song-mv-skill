@@ -29,22 +29,16 @@ def key_times(P, n=8):
         cands.append((tt, e['type'] + str(e.get('shape', ''))))
     cands.sort()
     chosen, seen = [t_title], set()
-    span = (P.dur - P.t0) / max(1, n - 1)
-    for pass_ in range(2):
-        for tt, kind in cands:
-            if len(chosen) >= n:
-                break
-            if pass_ == 0 and kind in seen:
-                continue
-            if all(abs(tt - c) > span * 0.45 for c in chosen):
-                chosen.append(tt)
-                seen.add(kind)
-    grid = np.linspace(P.t0 + 1, P.dur - 3, n)
-    for g in grid:
-        if len(chosen) >= n:
-            break
-        if all(abs(g - c) > 3 for c in chosen):
-            chosen.append(float(g))
+    edges = np.linspace(P.t0, P.dur - 2, n)
+    for a, b in zip(edges[:-1], edges[1:]):
+        pool = [(tt, kind) for tt, kind in cands if a <= tt < b]
+        if not pool:
+            chosen.append(float((a + b) / 2))
+            continue
+        fresh = [c for c in pool if c[1] not in seen] or pool
+        tt, kind = fresh[len(fresh) // 2]
+        chosen.append(tt)
+        seen.add(kind)
     out = []
     for c in sorted(chosen)[:n]:
         for sc in P.scenes[1:]:
