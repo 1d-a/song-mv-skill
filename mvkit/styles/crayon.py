@@ -2,6 +2,7 @@
 import numpy as np
 from PIL import Image, ImageDraw
 
+from mvkit.styles.crayon_book import Book
 from mvkit.core import FPS, H, W, char_img, ease, eout, fbm2d, fit_font, font, paste_center, shake, star_pts, text_layer, value_noise2d, window
 
 BLUE, ORANGE, DARK = (40, 110, 200), (235, 120, 40), (40, 40, 45)
@@ -118,6 +119,10 @@ class Style:
         size = fit_font('kai', P.subtitle, 900, 56) if P.subtitle else 48
         self.sub = text_layer(P.subtitle, font('kai', size), (230, 110, 40, 255), spacing=6) if P.subtitle else None
         self.page_starts = [s['start'] for s in P.scenes]
+        self.book = None
+        if P.sb.get('shots'):
+            self.book = Book(self, P.sb['shots'])
+            self.book.prepare()
 
     # ------------------------------------------------------------ static drawings
     def _border(self, lay, r):
@@ -496,10 +501,57 @@ class Style:
 
     def compose(self, c, g, tint):
         ca = np.asarray(c, np.float32)
-        a = ca[..., 3:] / 255 * (0.55 + 0.45 * g[..., None])
+        k = 0.8 if self.book is not None else 0.55
+        a = ca[..., 3:] / 255 * (k + (1 - k) * g[..., None])
         return self.paper * tint * (1 - a) + ca[..., :3] * a
 
+    def book_frame(self, t):
+        P, B = self.P, self.book
+        fi = int(round(t * FPS))
+        beat = P.beat(t)
+        vi = (fi // 4) % 3
+        g = self.grains[vi]
+        r = np.random.default_rng(fi // 4)
+        jit = r.normal(0, 1.5, 2)
+        tint = np.ones(3, np.float32)
+        si = B.shot_at(t)
+        out = self.compose(B.page(si, t, vi, r, beat), g, tint)
+        tt = t - B.starts[si]
+        if si > 0 and tt < 0.5:
+            p = ease(tt / 0.5)
+            old = self.compose(B.page(si - 1, t, vi, r, beat), g, tint)
+            xo = int(W * (1 - p))
+            new = out
+            out = np.roll(old, -int(W * 0.3 * p), 1)
+            out[:, xo:] = new[:, :W - xo]
+            sh = np.clip(1 - (np.arange(W) - xo + 60) / 60, 0, 1)[None, :, None] * (np.arange(W) < xo)[None, :, None]
+            out = out * (1 - 0.35 * sh)
+        canvas = Image.new('RGBA', (W, H))
+        B.frame_line(ImageDraw.Draw(canvas), r)
+        self.overlay(canvas, t, r, jit)
+        ca = np.asarray(canvas, np.float32)
+        a = ca[..., 3:] / 255
+        out = out * (1 - a) + ca[..., :3] * a
+        for tc, kind, amp in B.impacts:
+            k = t - tc
+            if 0 <= k < 0.45:
+                fl = dict(bolt=0.75, boom=0.5, flash=0.6, shake=0.0)[kind] * (1 - k / 0.45) ** 2
+                if fl > 0:
+                    out = out * (1 - fl) + np.array([255, 248, 225]) * fl
+                out = shake(out, tc, t, 0.45, 18 * amp, fi)
+        for tc, tn in self.impacts:
+            k = t - tc
+            if 0 <= k < 0.35:
+                if tn == 'final':
+                    fl = 0.45 * (1 - k / 0.35) ** 2
+                    out = out * (1 - fl) + np.array([255, 235, 190]) * fl
+                out = shake(out, tc, t, 0.35 if tn == 'final' else 0.2, 22 if tn == 'final' else 6, fi)
+        fo = ease((t - P.dur + 1.2) / 1.0)
+        return out * (1 - fo) + 250 * fo * ease(t / 0.01)
+
     def frame(self, t):
+        if self.book is not None:
+            return self.book_frame(t)
         P = self.P
         fi = int(round(t * FPS))
         beat = P.beat(t)
