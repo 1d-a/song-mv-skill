@@ -1,4 +1,4 @@
-"""方案 蜡笔童画: hand-drawn crayon picture book; every scene is a new page that slides in."""
+"""方案 蜡笔童画: hand-drawn crayon picture book; every scene is a new page."""
 import numpy as np
 from PIL import Image, ImageDraw
 
@@ -6,6 +6,9 @@ from mvkit.styles.crayon_book import Book
 from mvkit.core import FPS, H, W, char_img, ease, eout, fbm2d, fit_font, font, paste_center, shake, star_pts, text_layer, value_noise2d, window
 
 BLUE, ORANGE, DARK = (40, 110, 200), (235, 120, 40), (40, 40, 45)
+LYR_FONT = 'kai'
+TR_DUR = dict(fade=0.8, dissolve=0.9, iris=0.8, zoom=0.7, flash=0.5)
+TONE_FONT = dict(bold='sans', rise='sans', tragic='serif', final='serif')
 PALETTE = [(235, 80, 60), (40, 110, 200), (245, 190, 50), (60, 160, 90), (170, 90, 190)]
 MOODS = dict(default=[1, 1, 1], day=[1, 1, 0.97], dawn=[1, 0.95, 0.94], dusk=[1, 0.93, 0.84], night=[0.86, 0.89, 0.98], storm=[0.88, 0.88, 0.91])
 
@@ -123,6 +126,11 @@ class Style:
         if P.sb.get('shots'):
             self.book = Book(self, P.sb['shots'])
             self.book.prepare()
+            rn = np.random.default_rng(11)
+            coarse = Image.fromarray((rn.random((16, 9)) * 255).astype(np.uint8)).resize((W, H), Image.BICUBIC)
+            fine = Image.fromarray((rn.random((64, 36)) * 255).astype(np.uint8)).resize((W, H), Image.BICUBIC)
+            self.tr_noise = (np.asarray(coarse, np.float32) * 0.75 + np.asarray(fine, np.float32) * 0.25) / 255
+            self.tr_yy, self.tr_xx = np.mgrid[0:H, 0:W].astype(np.float32)
 
     # ------------------------------------------------------------ static drawings
     def _border(self, lay, r):
@@ -517,15 +525,11 @@ class Style:
         si = B.shot_at(t)
         out = self.compose(B.page(si, t, vi, r, beat), g, tint)
         tt = t - B.starts[si]
-        if si > 0 and tt < 0.5:
-            p = ease(tt / 0.5)
+        kind = B.transition(si)
+        if si > 0 and tt < TR_DUR[kind]:
             old = self.compose(B.page(si - 1, t, vi, r, beat), g, tint)
-            xo = int(W * (1 - p))
-            new = out
-            out = np.roll(old, -int(W * 0.3 * p), 1)
-            out[:, xo:] = new[:, :W - xo]
-            sh = np.clip(1 - (np.arange(W) - xo + 60) / 60, 0, 1)[None, :, None] * (np.arange(W) < xo)[None, :, None]
-            out = out * (1 - 0.35 * sh)
+            m = B.mask_np[..., None]
+            out = self.transition(kind, old, out, tt / TR_DUR[kind], B.shots[si].get('tr_at', (540, 840))) * m + out * (1 - m)
         canvas = Image.new('RGBA', (W, H))
         B.frame_line(ImageDraw.Draw(canvas), r)
         self.overlay(canvas, t, r, jit)
@@ -548,6 +552,38 @@ class Style:
                 out = shake(out, tc, t, 0.35 if tn == 'final' else 0.2, 22 if tn == 'final' else 6, fi)
         fo = ease((t - P.dur + 1.2) / 1.0)
         return out * (1 - fo) + 250 * fo * ease(t / 0.01)
+
+    def transition(self, kind, old, new, u, at):
+        """blend two composed pages; u runs 0 -> 1 over the transition"""
+        if kind == 'fade':
+            p = ease(u)
+            return old * (1 - p) + new * p
+        if kind == 'dissolve':
+            m = np.clip((ease(u) * 1.6 - self.tr_noise) / 0.6, 0, 1)[..., None]
+            edge = np.clip(1 - np.abs(m - 0.5) * 2, 0, 1) * 0.2
+            return (old * (1 - m) + new * m) * (1 - edge) + self.paper * edge
+        if kind == 'iris':
+            rr = np.hypot(self.tr_xx - at[0], self.tr_yy - at[1]) / 2000 + self.tr_noise * 0.06
+            m = np.clip((eout(u) * 1.1 - rr) / 0.04, 0, 1)[..., None]
+            ring = np.clip(1 - np.abs(m - 0.5) * 2, 0, 1) * 0.6
+            return (old * (1 - m) + new * m) * (1 - ring) + np.array([60, 55, 60], np.float32) * ring
+        if kind == 'zoom':
+            p = ease(u)
+            return self.scaled(old, 1 + 0.18 * p) * (1 - p) + self.scaled(new, 0.94 + 0.06 * p) * p
+        if kind == 'flash':
+            w = np.clip(1 - abs(u - 0.4) / 0.4, 0, 1) ** 0.7
+            base = old if u < 0.4 else new
+            return base * (1 - w) + np.array([255, 250, 235], np.float32) * w
+        raise ValueError(f'unknown transition {kind!r}')
+
+    @staticmethod
+    def scaled(a, s):
+        if abs(s - 1) < 0.002:
+            return a
+        im = Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))
+        ww, hh = W / s, H / s
+        x0, y0 = (W - ww) / 2, (H - hh) / 2
+        return np.asarray(im.transform((W, H), Image.EXTENT, (x0, y0, x0 + ww, y0 + hh), Image.BILINEAR), np.float32)
 
     def frame(self, t):
         if self.book is not None:
@@ -614,14 +650,20 @@ class Style:
         st = P.lyric_state(t)
         sung = [x for x in st if x[3] > 0]
         plain = [x for x in st if self.tones[x[0]] is None]
+        live = [x[0] for x in plain if x[3] > 0]
+        top = max(live) if live else -1
         for li_, j, ch, p, la, dt in plain:
             if p <= 0:
                 continue
+            if li_ < top:
+                la *= max(0.0, 1 - (t - P.lyr[top][1][0]) / 0.15)
+                if la <= 0:
+                    continue
             nn = len(P.lyr[li_][0])
             step = min(104, 960 / nn)
             x = W / 2 + (j - (nn - 1) / 2) * step + jit[0]
             pe = eout(p)
-            cc = char_img(ch, 'zhimang', int(step * 1.06), (40, 40, 45, 255))
+            cc = char_img(ch, LYR_FONT, int(step * 0.92), (40, 40, 45, 255), stroke=3, stroke_fill=(255, 250, 240, 255))
             paste_center(canvas, cc, x, 1735 - 30 * (1 - pe) + r.normal() * 1.5, alpha=pe * la, rot=r.normal() * 2)
         for x in st:
             if self.tones[x[0]] is not None:
@@ -670,7 +712,7 @@ class Style:
             pe = eout(float(np.clip(dt / 0.8, 0, 1)))
             if pe <= 0:
                 return
-            cc = char_img(ch, 'zhimang', int(step * 1.0), (60, 95, 165, 255), stroke=6, stroke_fill=(255, 255, 255, 170))
+            cc = char_img(ch, LYR_FONT, int(step * 0.92), (60, 95, 165, 255), stroke=6, stroke_fill=(255, 255, 255, 170))
             tr = 3.5 * np.sin(t * 11 + j * 1.7) + r.normal() * 1.5
             sink = 10 * max(0.0, dt - 0.8) if dt > 0.8 else 0
             paste_center(canvas, cc, x + tr, y - 20 * (1 - pe) + min(sink, 18), alpha=pe * la * 0.92, rot=4 * np.sin(t * 3 + j))
@@ -683,7 +725,7 @@ class Style:
         if tn == 'bold':
             pop = 1 + 0.6 * np.exp(-dt * 7) * np.cos(dt * 18) + 0.05 * beat
             col = [(235, 80, 60), (235, 120, 40), (40, 110, 200), (60, 160, 90)][j % 4]
-            cc = char_img(ch, 'zhimang', int(step * 1.02), col + (255,), stroke=7, stroke_fill=(255, 255, 255, 255))
+            cc = char_img(ch, TONE_FONT['bold'], int(step * 0.9), col + (255,), stroke=7, stroke_fill=(255, 255, 255, 255))
             paste_center(canvas, cc, x, y - 26 * np.exp(-dt * 6) + r.normal(), alpha=la, scale=max(0.3, pop), rot=(-6 if j % 2 else 6) * np.exp(-dt * 4) + r.normal())
             if dt < 0.6:
                 k = dt / 0.6
@@ -693,7 +735,7 @@ class Style:
                            fill=(245, 190, 50, int(230 * (1 - k) * la)), width=6)
         elif tn == 'tragic':
             pe = eout(float(np.clip(dt / 0.16, 0, 1)))
-            cc = char_img(ch, 'zhimang', int(step * 1.04), (165, 25, 25, 255), stroke=6, stroke_fill=(35, 30, 30, 255))
+            cc = char_img(ch, TONE_FONT['tragic'], int(step * 0.92), (165, 25, 25, 255), stroke=6, stroke_fill=(255, 240, 225, 255))
             paste_center(canvas, cc, x, y - 140 * (1 - pe) + r.normal(), alpha=la * min(1, pe * 2), scale=1.5 - 0.5 * pe + 0.03 * beat, rot=r.normal() * 1.5)
             for k in range(3):
                 a = (dt * 0.9 + k / 3 + rs.uniform()) % 1.0
@@ -708,7 +750,7 @@ class Style:
             col = tuple(int(a + (b - a) * f) for a, b in zip((60, 60, 70), (220, 50, 40)))
             pe = eout(p)
             sc = (0.8 + 0.45 * f) * (1.2 - 0.2 * pe)
-            cc = char_img(ch, 'zhimang', int(step), col + (255,), stroke=int(2 + 5 * f), stroke_fill=(255, 245, 225, 255))
+            cc = char_img(ch, TONE_FONT['rise'], int(step * 0.9), col + (255,), stroke=int(2 + 5 * f), stroke_fill=(255, 245, 225, 255))
             paste_center(canvas, cc, x, y - 30 * (1 - pe) - 30 * f + r.normal() * (1 + 3 * f), alpha=pe * la, scale=sc, rot=r.normal() * 2)
         elif tn == 'final':
             pe = eout(float(np.clip(dt / 0.18, 0, 1)))
@@ -721,8 +763,8 @@ class Style:
                 rr = step * (0.5 + 1.8 * eout(k))
                 d.ellipse([x - rr, y - rr, x + rr, y + rr], outline=(220, 50, 40, int(220 * (1 - k) * la)), width=10)
             col = (215, 40, 30) if j % 2 == 0 else (235, 150, 20)
-            glow = char_img(ch, 'zhimang', int(step * 0.98), (245, 190, 50, 150), stroke=22, stroke_fill=(245, 190, 50, 110))
-            cc = char_img(ch, 'zhimang', int(step * 0.98), col + (255,), stroke=9, stroke_fill=(35, 30, 30, 255))
+            glow = char_img(ch, TONE_FONT['final'], int(step * 0.9), (245, 190, 50, 150), stroke=22, stroke_fill=(245, 190, 50, 110))
+            cc = char_img(ch, TONE_FONT['final'], int(step * 0.9), col + (255,), stroke=9, stroke_fill=(35, 30, 30, 255))
             sc = 3.2 - 2.2 * pe + 0.06 * beat + 0.02 * np.sin(t * 6 + j)
             paste_center(canvas, glow, x, y, alpha=la * pe * (0.5 + 0.5 * beat), scale=sc * 1.04)
             paste_center(canvas, cc, x + r.normal() * 2, y + r.normal() * 2, alpha=la * min(1, pe * 1.6), scale=sc, rot=(-10 if j % 2 else 10) * (1 - pe) + r.normal())
