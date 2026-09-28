@@ -79,8 +79,31 @@ def worker(pdir, style, chunks, f0, f1):
         print(f'[{style}] chunk {c} frames {a}-{b} done in {time.time() - t0:.0f}s', flush=True)
 
 
-def render(pdir, style, start=0.0, dur=None, jobs=2, out=None):
+def auto_jobs(mem_per_job=1.5, reserve=1.0, cap=8):
+    """parallel workers that fit this machine: usable CPUs (affinity + cgroup quota), one core kept free on 4+,
+    and MemAvailable minus `reserve` GB divided by ~`mem_per_job` GB per worker (style ~0.9 GB + its x264 encoder)"""
+    cpus = len(os.sched_getaffinity(0)) if hasattr(os, 'sched_getaffinity') else (os.cpu_count() or 1)
+    try:
+        q, per = open('/sys/fs/cgroup/cpu.max').read().split()
+        if q != 'max':
+            cpus = min(cpus, max(1, int(int(q) / int(per))))
+    except (OSError, ValueError):
+        pass
+    mem = None
+    try:
+        mem = next(int(l.split()[1]) / 2 ** 20 for l in open('/proc/meminfo') if l.startswith('MemAvailable:'))
+    except (OSError, StopIteration):
+        pass
+    by_cpu = cpus - 1 if cpus >= 4 else cpus
+    by_mem = by_cpu if mem is None else int((mem - reserve) // mem_per_job)
+    jobs = max(1, min(by_cpu, by_mem, cap))
+    print(f'[render] {cpus} CPUs, ' + ('unknown' if mem is None else f'{mem:.1f} GB') + f' RAM available -> --jobs {jobs}')
+    return jobs
+
+
+def render(pdir, style, start=0.0, dur=None, jobs=None, out=None):
     P = Project(pdir)
+    jobs = jobs or auto_jobs()
     dur = P.dur - start if dur is None else min(dur, P.dur - start)
     f0, f1 = int(round(start * FPS)), int(round((start + dur) * FPS))
     bdir = build_dir(P, style)
@@ -131,7 +154,7 @@ if __name__ == '__main__':
     ap.add_argument('--style', required=True, choices=list(STYLES))
     ap.add_argument('--start', type=float, default=0.0)
     ap.add_argument('--dur', type=float)
-    ap.add_argument('--jobs', type=int, default=max(1, min(4, (os.cpu_count() or 2) // 2)))
+    ap.add_argument('--jobs', type=int, help='parallel workers (default: auto from CPUs and free RAM)')
     ap.add_argument('--out')
     ap.add_argument('--stills', help='comma separated seconds')
     ap.add_argument('--sheet', help='contact sheet png for --stills')
