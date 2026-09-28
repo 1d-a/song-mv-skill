@@ -29,6 +29,7 @@ TYPES = {
     'stamp': 'big word slams onto screen (text=...)',
     'weather': 'kind=rain|snow|petals|embers particles',
     'zoom': 'camera pushes in (amount, default 0.3) and back out at end',
+    'lyricfx': 'climax lyric treatment for lines starting in [start, end): tone=bold|fragile|tragic|rise|final',
 }
 SHAPES = ('sword', 'pouch', 'cloak', 'fire', 'glyph')
 MOODS = ('default', 'day', 'dusk', 'night', 'storm', 'dawn')

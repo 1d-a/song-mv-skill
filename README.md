@@ -52,7 +52,7 @@ $PY -m mvkit.render projects/mysong --style paper  # 完整成片 -> out/<标题
 - 时间可以写秒数，也可以引用歌词：`L3` 是第 3 行开始，`L3.2` 是第 3 行第 2 个字，`L3.end` 是第 3 行结束。还可以用 `T0`（第一句）、`drop`（鼓点进来）、`end`，都能加减偏移，例如 `L3.2+0.4`
 - `hits`（触发时刻）：可以写时间列表，也可以写 `chars:L5`（第 5 行每个字）、`beats:A~B`（区间内每拍）、`strong:A~B`（区间内重拍）
 - mood：`default` / `day` / `dawn` / `dusk` / `night` / `storm`，决定纸色、天色和日月
-- event 类型：`prop`（sword / pouch / cloak / fire / glyph，动作 rise / sway / drop / swarm）、`clouds`、`dim`、`village`、`thread`、`burst`、`thunder`、`scatter`、`fireworks`、`lanterns`、`stamp`、`weather`（rain / snow / petals / embers）、`zoom`
+- event 类型：`prop`（sword / pouch / cloak / fire / glyph，动作 rise / sway / drop / swarm）、`clouds`、`dim`、`village`、`thread`、`burst`、`thunder`、`scatter`、`fireworks`、`lanterns`、`stamp`、`weather`（rain / snow / petals / embers）、`zoom`、`lyricfx`（副歌/高潮歌词特效，tone = bold / fragile / tragic / rise / final，目前蜡笔童画支持）
 
 完整示例见 `examples/mujian/`（《木剑破衫》的全曲分镜）。Agent 的操作规范见 `.agents/skills/song-mv/SKILL.md`。
 

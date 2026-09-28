@@ -110,12 +110,13 @@ class Style:
         self.POUCH = pre(self._pouch, 40)
         self.CLOUDT = pre(self._cloudtop, 50)
         self.BOLT = pre(self._bolt, 51)
-        self.HONG = text_layer('轰!', font('zhimang', 260), (220, 50, 40, 255))
+        self.HONG = self._boom(np.random.default_rng(52))
+        self.tones = [self.tone_of(ts[0]) for _, ts, _ in P.lyr]
+        self.impacts = [(tc, tn) for (_, ts, _), tn in zip(P.lyr, self.tones) if tn in ('final', 'tragic') for tc in ts]
         size = fit_font('zhimang', P.title, 940, 230)
         self.title = text_layer(P.title, font('zhimang', size), (35, 35, 40, 255), spacing=10)
         size = fit_font('kai', P.subtitle, 900, 56) if P.subtitle else 48
         self.sub = text_layer(P.subtitle, font('kai', size), (230, 110, 40, 255), spacing=6) if P.subtitle else None
-        self.teaser = text_layer(P.lyr[0][0], font('kai', min(78, int(900 / max(1, len(P.lyr[0][0]))))), (40, 40, 45, 255), spacing=4) if P.lyr else None
         self.page_starts = [s['start'] for s in P.scenes]
 
     # ------------------------------------------------------------ static drawings
@@ -239,6 +240,22 @@ class Style:
         poly_line(ImageDraw.Draw(lay), poly, (230, 140, 30), r, 6)
 
     # ------------------------------------------------------------ dynamic pieces
+    def tone_of(self, ts):
+        for e in self.P.ev('lyricfx'):
+            if e['start'] - 0.3 <= ts < e['end']:
+                return e.get('tone', 'bold')
+        return None
+
+    def _boom(self, r):
+        lay = Image.new('RGBA', (560, 560))
+        d = ImageDraw.Draw(lay)
+        pts = star_pts(280, 280, 260, 120, n=11)
+        d.polygon(pts, fill=(245, 190, 50, 235))
+        poly_line(d, pts, (220, 50, 40), r, 10)
+        inner = star_pts(280, 280, 140, 70, n=9, rot=0.3)
+        d.polygon(inner, fill=(235, 80, 60, 240))
+        return lay
+
     def fire(self, c, t, r, beat, a0, fa, pos=FC):
         d = ImageDraw.Draw(c)
         s = (0.4 + 0.6 * eout((t - a0) / 0.4)) * (1 + 0.25 * beat)
@@ -339,8 +356,8 @@ class Style:
                 for k, tc in enumerate(np.arange(s0 + 0.3, s1, 0.9)):
                     a = t - tc
                     if 0 <= a < 3:
-                        paste_center(c, char_img('Z', 'kai', 60 + 25 * (k % 3), BLUE + (255,)), 700 + a * 60 + 20 * np.sin(a * 3), 520 - a * 110,
-                                     alpha=(1 - ease((a - 2.2) / 0.8)) * fa, rot=15 * np.sin(a * 2))
+                        bx, by, br = 700 + a * 60 + 20 * np.sin(a * 3), 520 - a * 110, 14 + 9 * (k % 3) + 6 * a
+                        d.ellipse([bx - br, by - br, bx + br, by + br], outline=BLUE + (int(200 * (1 - ease((a - 2.2) / 0.8)) * fa),), width=5)
             elif ty == 'village':
                 g = wipe(self.GROUND[vi], eout((t - s0) / 0.6), self.XN)
                 if g is not None:
@@ -522,6 +539,13 @@ class Style:
                 out = shake(out, e['start'], t, 0.4, 20, fi)
         for e in P.ev('stamp'):
             out = shake(out, e['start'], t, 0.3, 14, 3)
+        for tc, tn in self.impacts:
+            k = t - tc
+            if 0 <= k < 0.35:
+                if tn == 'final':
+                    fl = 0.55 * (1 - k / 0.35) ** 2
+                    out = out * (1 - fl) + np.array([255, 235, 190]) * fl
+                out = shake(out, tc, t, 0.35 if tn == 'final' else 0.2, 26 if tn == 'final' else 7, fi)
         fo = ease((t - P.dur + 1.2) / 1.0)
         return out * (1 - fo) + 250 * fo * ease(t / 0.01)
 
@@ -535,17 +559,10 @@ class Style:
                 paste_center(canvas, self.title, W / 2 + jit[0], tpos + (1 - p) * -80 + jit[1], alpha=p * fa, rot=r.normal() * 0.8)
             if self.sub is not None and t > 1.5:
                 paste_center(canvas, self.sub, W / 2, tpos + 60 + self.title.height / 2 + 50, alpha=eout((t - 1.5) / 0.6) * fa)
-            ts, te = P.drop + 0.3, P.t0 - 0.3
-            if self.teaser is not None and te - ts > 2 and ts < t < te:
-                n = len(P.lyr[0][0])
-                k = min(n, int((t - ts) / 0.18) + 1)
-                part = self.teaser.crop((0, 0, int(self.teaser.width * k / n), self.teaser.height))
-                c2 = Image.new('RGBA', self.teaser.size)
-                c2.alpha_composite(part)
-                paste_center(canvas, c2, W / 2 + jit[0], 1740 + jit[1], rot=r.normal() * 0.6, alpha=1 - ease((t - te + 0.6) / 0.6))
         st = P.lyric_state(t)
         sung = [x for x in st if x[3] > 0]
-        for li_, j, ch, p, la, dt in st:
+        plain = [x for x in st if self.tones[x[0]] is None]
+        for li_, j, ch, p, la, dt in plain:
             if p <= 0:
                 continue
             nn = len(P.lyr[li_][0])
@@ -554,14 +571,106 @@ class Style:
             pe = eout(p)
             cc = char_img(ch, 'zhimang', int(step * 1.06), (40, 40, 45, 255))
             paste_center(canvas, cc, x, 1735 - 30 * (1 - pe) + r.normal() * 1.5, alpha=pe * la, rot=r.normal() * 2)
-        if sung:
+        for x in st:
+            if self.tones[x[0]] is not None:
+                self.climax_char(canvas, t, r, jit, *x)
+        if sung and self.tones[sung[-1][0]] not in ('final',):
             li_ = sung[-1][0]
+            tn = self.tones[li_]
             nn = len(P.lyr[li_][0])
-            step = min(104, 960 / nn)
+            step = self.step(tn, nn)
             la = sung[-1][4]
             cur = [x for x in sung if x[0] == li_]
             x0 = W / 2 - nn * step / 2
             xe = x0 + step * (len(cur) - 1 + cur[-1][3])
             ul = Image.new('RGBA', (W, 60))
-            jline(ImageDraw.Draw(ul), [(x0, 30), (xe, 34)], ORANGE, 7, r, 3, 2)
-            canvas.alpha_composite(fade(ul, la), (0, 1800))
+            col = dict(bold=(235, 80, 60), fragile=(120, 160, 220), tragic=(150, 25, 25), rise=(220, 50, 40)).get(tn, ORANGE)
+            if tn == 'bold':
+                n = max(2, int((xe - x0) / 22))
+                pts = [(x0 + (xe - x0) * k / n, 24 + 14 * (k % 2)) for k in range(n + 1)]
+            else:
+                pts = [(x0, 30), (xe, 34)]
+            jline(ImageDraw.Draw(ul), pts, col, 11 if tn in ('bold', 'tragic') else 7, r, 3, 2)
+            canvas.alpha_composite(fade(ul, la), (0, self.lyr_y(tn) + 65))
+
+    @staticmethod
+    def step(tn, nn):
+        if tn == 'final':
+            return min(235, 980 / nn)
+        if tn in ('bold', 'tragic', 'rise'):
+            return min(124, 1000 / nn)
+        return min(104, 960 / nn)
+
+    @staticmethod
+    def lyr_y(tn):
+        return dict(final=1420, bold=1700, tragic=1700, rise=1700).get(tn, 1735)
+
+    def climax_char(self, canvas, t, r, jit, li_, j, ch, p, la, dt):
+        tn = self.tones[li_]
+        nn = len(self.P.lyr[li_][0])
+        step = self.step(tn, nn)
+        x = W / 2 + (j - (nn - 1) / 2) * step + jit[0]
+        y = self.lyr_y(tn) + jit[1]
+        beat = self.P.beat(t)
+        d = ImageDraw.Draw(canvas, 'RGBA')
+        rs = np.random.default_rng(li_ * 100 + j)
+        if tn == 'fragile':
+            pe = eout(float(np.clip(dt / 0.8, 0, 1)))
+            if pe <= 0:
+                return
+            cc = char_img(ch, 'zhimang', int(step * 1.0), (60, 95, 165, 255), stroke=6, stroke_fill=(255, 255, 255, 170))
+            tr = 3.5 * np.sin(t * 11 + j * 1.7) + r.normal() * 1.5
+            sink = 10 * max(0.0, dt - 0.8) if dt > 0.8 else 0
+            paste_center(canvas, cc, x + tr, y - 20 * (1 - pe) + min(sink, 18), alpha=pe * la * 0.92, rot=4 * np.sin(t * 3 + j))
+            if j % 3 == 1 and 0.4 < dt < 2.6:
+                k = (dt - 0.4) / 2.2
+                d.ellipse([x - 7, y + 55 + 90 * k - 10, x + 7, y + 55 + 90 * k + 10], fill=(120, 160, 220, int(200 * (1 - k) * la)))
+            return
+        if p <= 0:
+            return
+        if tn == 'bold':
+            pop = 1 + 0.6 * np.exp(-dt * 7) * np.cos(dt * 18) + 0.05 * beat
+            col = [(235, 80, 60), (235, 120, 40), (40, 110, 200), (60, 160, 90)][j % 4]
+            cc = char_img(ch, 'zhimang', int(step * 1.02), col + (255,), stroke=7, stroke_fill=(255, 255, 255, 255))
+            paste_center(canvas, cc, x, y - 26 * np.exp(-dt * 6) + r.normal(), alpha=la, scale=max(0.3, pop), rot=(-6 if j % 2 else 6) * np.exp(-dt * 4) + r.normal())
+            if dt < 0.6:
+                k = dt / 0.6
+                for a in np.linspace(0, 2 * np.pi, 8, endpoint=False) + rs.uniform(0, 1):
+                    r0, r1 = step * (0.55 + 0.5 * k), step * (0.75 + 0.8 * k)
+                    d.line([(x + r0 * np.cos(a), y + r0 * np.sin(a)), (x + r1 * np.cos(a), y + r1 * np.sin(a))],
+                           fill=(245, 190, 50, int(230 * (1 - k) * la)), width=6)
+        elif tn == 'tragic':
+            pe = eout(float(np.clip(dt / 0.16, 0, 1)))
+            cc = char_img(ch, 'zhimang', int(step * 1.04), (165, 25, 25, 255), stroke=6, stroke_fill=(35, 30, 30, 255))
+            paste_center(canvas, cc, x, y - 140 * (1 - pe) + r.normal(), alpha=la * min(1, pe * 2), scale=1.5 - 0.5 * pe + 0.03 * beat, rot=r.normal() * 1.5)
+            for k in range(3):
+                a = (dt * 0.9 + k / 3 + rs.uniform()) % 1.0
+                if dt > 0.15:
+                    ex, ey = x + rs.uniform(-40, 40) + 12 * np.sin(t * 3 + k), y - 40 - 170 * a
+                    d.ellipse([ex - 5, ey - 5, ex + 5, ey + 5], fill=(245, 140 - 60 * k % 120, 40, int(220 * (1 - a) * la)))
+            if dt < 0.3:
+                k = dt / 0.3
+                d.ellipse([x - step * (0.5 + k), y + 40 - 18 * (0.5 + k), x + step * (0.5 + k), y + 40 + 18 * (0.5 + k)], outline=(90, 60, 50, int(200 * (1 - k))), width=5)
+        elif tn == 'rise':
+            f = j / max(1, nn - 1)
+            col = tuple(int(a + (b - a) * f) for a, b in zip((60, 60, 70), (220, 50, 40)))
+            pe = eout(p)
+            sc = (0.8 + 0.45 * f) * (1.2 - 0.2 * pe)
+            cc = char_img(ch, 'zhimang', int(step), col + (255,), stroke=int(2 + 5 * f), stroke_fill=(255, 245, 225, 255))
+            paste_center(canvas, cc, x, y - 30 * (1 - pe) - 30 * f + r.normal() * (1 + 3 * f), alpha=pe * la, scale=sc, rot=r.normal() * 2)
+        elif tn == 'final':
+            pe = eout(float(np.clip(dt / 0.18, 0, 1)))
+            if dt < 0.9:
+                k = dt / 0.9
+                for m, a in enumerate(np.linspace(0, 2 * np.pi, 16, endpoint=False) + rs.uniform(0, 0.4)):
+                    r0, r1 = step * 0.6, step * (0.9 + 1.6 * eout(k)) * (1 if m % 2 else 0.7)
+                    d.line([(x + r0 * np.cos(a), y + r0 * np.sin(a)), (x + r1 * np.cos(a), y + r1 * np.sin(a))],
+                           fill=((245, 190, 50) if m % 2 else (220, 50, 40)) + (int(240 * (1 - k) * la),), width=9)
+                rr = step * (0.5 + 1.8 * eout(k))
+                d.ellipse([x - rr, y - rr, x + rr, y + rr], outline=(220, 50, 40, int(220 * (1 - k) * la)), width=10)
+            col = (215, 40, 30) if j % 2 == 0 else (235, 150, 20)
+            glow = char_img(ch, 'zhimang', int(step * 0.98), (245, 190, 50, 150), stroke=22, stroke_fill=(245, 190, 50, 110))
+            cc = char_img(ch, 'zhimang', int(step * 0.98), col + (255,), stroke=9, stroke_fill=(35, 30, 30, 255))
+            sc = 3.2 - 2.2 * pe + 0.06 * beat + 0.02 * np.sin(t * 6 + j)
+            paste_center(canvas, glow, x, y, alpha=la * pe * (0.5 + 0.5 * beat), scale=sc * 1.04)
+            paste_center(canvas, cc, x + r.normal() * 2, y + r.normal() * 2, alpha=la * min(1, pe * 1.6), scale=sc, rot=(-10 if j % 2 else 10) * (1 - pe) + r.normal())

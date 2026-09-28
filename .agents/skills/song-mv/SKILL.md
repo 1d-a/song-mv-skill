@@ -12,7 +12,9 @@ Repo: https://github.com/1d-a/song-mv-skill (toolkit `mvkit/`, fonts, full examp
 - **The sung sections must keep changing visually, like the intro does.** Not just lyrics over a static backdrop: a new scene (mood change / page / wipe) every ~2 lines and at least one new event per line. `python -m mvkit.storyboard PROJECT` must print `no problems found`.
 - Lyrics appear per character at the **actual sung time** (from `mvkit.align`), not evenly spread.
 - Output: 1080×1920, 30 fps, H.264 + original audio (AAC), full song length.
-- Opening title + subtitle are shown in the chosen style's own typography during the intro.
+- Opening title + subtitle are shown in the chosen style's own typography during the intro — nothing else in the intro (no lyric teaser, credits or seal unless the user asks; set `"credits": ""`, `"seal": ""`).
+- No on-screen text that isn't sung: `[...]` tags are performance cues, never shown; `stamp`/glyph/pouch texts must be words from the lyrics sung at that moment.
+- Chorus / climax lyrics get a dedicated `lyricfx` treatment matching the section's mood (`bold` confident, `fragile` vulnerable, `tragic` heavy resolve, `rise` crescendo, `final` biggest: giant slamming characters, flash, shake, rays). Currently implemented in `crayon`.
 
 ## Inputs to collect
 Audio file, lyrics (text/file, `[Verse]`-style tags allowed), opening title, opening subtitle. Optional: credits line (default `词曲 · 演唱`), seal text for 水墨 (default = first 4 chars of title). If any of the four required inputs is missing, ask for it before starting.
