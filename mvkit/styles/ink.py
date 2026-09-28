@@ -33,6 +33,7 @@ class Style:
 
     def __init__(self, P):
         self.P = P
+        self.view_y = 0 if P.OH == H else 240
         rng = np.random.default_rng(1)
         self.yy, self.xx = np.mgrid[0:H, 0:W].astype(np.float32)
         yy, xx = self.yy, self.xx

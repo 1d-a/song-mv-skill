@@ -6,6 +6,8 @@ from mvkit.core import H, W, ease, eout
 from mvkit.styles import crayon_art as A
 
 BOX = (50, 70, 1030, 1610)
+BOX_34 = (50, 280, 1030, 1460)
+VIEW_34 = 230
 BG = dict(
     day=[((190, 220, 245), 0, 0.55, 120), ((225, 238, 248), 0.55, 1, 90)],
     dawn=[((250, 200, 185), 0, 0.45, 120), ((252, 228, 170), 0.45, 1, 110)],
@@ -19,9 +21,9 @@ BG = dict(
 )
 
 
-def box_mask(seed=0):
+def box_mask(seed=0, box=BOX):
     r = np.random.default_rng(seed)
-    x0, y0, x1, y1 = BOX
+    x0, y0, x1, y1 = box
     pts = []
     for x in np.linspace(x0, x1, 30):
         pts.append((x, y0 + r.normal() * 3))
@@ -36,9 +38,9 @@ def box_mask(seed=0):
     return m, pts
 
 
-def bg_layer(kind, r):
+def bg_layer(kind, r, box=BOX):
     lay = Image.new('RGBA', (W, H))
-    x0, y0, x1, y1 = BOX
+    x0, y0, x1, y1 = box
     stops = BG[kind]
     if stops:
         ys = np.linspace(0, 1, H)[:, None]
@@ -60,6 +62,46 @@ def bg_layer(kind, r):
     return lay
 
 
+def reflow(shots, box):
+    """map shots laid out in BOX onto a shorter box: y positions compress by k, sizes by sqrt(k)"""
+    k = (box[3] - box[1]) / (BOX[3] - BOX[1])
+    ks = k ** 0.5
+
+    def Y(y):
+        return box[1] + (y - BOX[1]) * k
+
+    out = []
+    for sh in shots:
+        sh = dict(sh)
+        if 'tr_at' in sh:
+            sh['tr_at'] = (sh['tr_at'][0], Y(sh['tr_at'][1]))
+        if 'cam' in sh and 'y' in sh['cam']:
+            sh['cam'] = dict(sh['cam'], y=[v * k for v in sh['cam']['y']])
+        items = []
+        for it in sh['items']:
+            it = dict(it, y=Y(it.get('y', 900)), s=it.get('s', 1.0) * ks)
+            if 'to' in it:
+                it['to'] = [it['to'][0], Y(it['to'][1])]
+            items.append(it)
+        fxs = []
+        for f in sh.get('fx', []):
+            f = dict(f)
+            for key in ('y', 'y0', 'y1'):
+                if key in f:
+                    f[key] = Y(f[key])
+            for key in ('s', 'r', 'r0', 'r1'):
+                if key in f:
+                    f[key] = f[key] * ks
+            if 'h' in f:
+                f['h'] = f['h'] * k
+            if 'path' in f:
+                f['path'] = [[x, Y(y)] for x, y in f['path']]
+            fxs.append(f)
+        sh['items'], sh['fx'] = items, fxs
+        out.append(sh)
+    return out, Y
+
+
 def pline(pts, u):
     """point at fraction u along polyline + partial polyline"""
     pts = np.asarray(pts, np.float32)
@@ -79,9 +121,12 @@ def pline(pts, u):
 class Book:
     def __init__(self, S, shots):
         self.S, self.P = S, S.P
-        self.shots = shots
+        self.box = BOX if S.P.OH == H else BOX_34
+        self.view_y = 0 if S.P.OH == H else VIEW_34
+        self.shots, self.Y = (shots, lambda y: y) if self.box == BOX else reflow(shots, self.box)
+        self.cy = self.Y(840)
         self.starts = [s['start'] for s in shots]
-        self.mask, self.box_pts = box_mask(3)
+        self.mask, self.box_pts = box_mask(3, self.box)
         self.mask_np = np.asarray(self.mask, np.float32) / 255
         self.bgs = {}
         self.cache = {}
@@ -101,7 +146,7 @@ class Book:
 
     def bg(self, kind, vi):
         if kind not in self.bgs:
-            self.bgs[kind] = [bg_layer(kind, np.random.default_rng(100 + i)) for i in range(3)]
+            self.bgs[kind] = [bg_layer(kind, np.random.default_rng(100 + i), self.box) for i in range(3)]
         return self.bgs[kind][vi]
 
     def item_layers(self, si, ii):
@@ -516,10 +561,10 @@ class Book:
         px0, px1 = cam.get('x', [0, 0])
         py0, py1 = cam.get('y', [0, 0])
         z = z0 + (z1 - z0) * u
-        cx, cy = 540 + px0 + (px1 - px0) * u, 840 + py0 + (py1 - py0) * u
-        if abs(z - 1) > 0.002 or cx != 540 or cy != 840:
+        cx, cy = 540 + px0 + (px1 - px0) * u, self.cy + py0 + (py1 - py0) * u
+        if abs(z - 1) > 0.002 or cx != 540 or cy != self.cy:
             ww, hh = W / z, H / z
-            x0, y0 = cx - ww * 540 / W, cy - hh * 840 / H
+            x0, y0 = cx - ww * 540 / W, cy - hh * self.cy / H
             c = c.transform((W, H), Image.EXTENT, (x0, y0, x0 + ww, y0 + hh), Image.BILINEAR)
         a = np.asarray(c.getchannel('A'), np.float32) * self.mask_np
         c.putalpha(Image.fromarray(a.astype(np.uint8)))

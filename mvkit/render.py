@@ -15,8 +15,8 @@ import time
 import numpy as np
 from PIL import Image
 
-from mvkit.core import FPS, H, W, Project
-from mvkit.styles import STYLES, load_style
+from mvkit.core import FPS, Project
+from mvkit.styles import STYLES, load_style, out_frame
 
 CHUNK = 300  # frames
 
@@ -41,9 +41,9 @@ def chunk_ok(path, nframes):
         return False
 
 
-def encode(frames_iter, path):
+def encode(frames_iter, path, size):
     tmp = path + '.part.mp4'
-    p = subprocess.Popen(['ffmpeg', '-y', '-v', 'error', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{W}x{H}', '-r', str(FPS), '-i', '-',
+    p = subprocess.Popen(['ffmpeg', '-y', '-v', 'error', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{size[0]}x{size[1]}', '-r', str(FPS), '-i', '-',
                           '-c:v', 'libx264', '-preset', 'medium', '-crf', '19', '-pix_fmt', 'yuv420p', tmp], stdin=subprocess.PIPE)
     for fr in frames_iter:
         p.stdin.write(np.clip(fr, 0, 255).astype(np.uint8).tobytes())
@@ -75,7 +75,7 @@ def worker(pdir, style, chunks, f0, f1):
         if chunk_ok(path, b - a):
             continue
         t0 = time.time()
-        encode((S.frame(fi / FPS) for fi in range(a, b)), path)
+        encode((out_frame(S, fi / FPS) for fi in range(a, b)), path, (P.OW, P.OH))
         print(f'[{style}] chunk {c} frames {a}-{b} done in {time.time() - t0:.0f}s', flush=True)
 
 
@@ -102,8 +102,8 @@ def render(pdir, style, start=0.0, dur=None, jobs=2, out=None):
     subprocess.run(['ffmpeg', '-y', '-v', 'error', '-f', 'concat', '-safe', '0', '-i', lst, '-ss', f'{start:.3f}', '-t', f'{dur:.3f}', '-i', P.audio,
                     '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-af', afade, '-shortest', '-movflags', '+faststart', out], check=True)
     info = ffprobe(out)
-    ok = 'video' in info.get('codec_type', []) and 'audio' in info.get('codec_type', []) and info.get('width') == [str(W)] and info.get('height') == [str(H)]
-    print(f"{out}\n  duration={float(info['duration'][-1]):.2f}s  size={W}x{H}  streams={info.get('codec_type')}  {'OK' if ok else 'CHECK FAILED'}")
+    ok = 'video' in info.get('codec_type', []) and 'audio' in info.get('codec_type', []) and info.get('width') == [str(P.OW)] and info.get('height') == [str(P.OH)]
+    print(f"{out}\n  duration={float(info['duration'][-1]):.2f}s  size={P.OW}x{P.OH}  streams={info.get('codec_type')}  {'OK' if ok else 'CHECK FAILED'}")
     if not ok:
         raise SystemExit(1)
     return out
@@ -112,9 +112,9 @@ def render(pdir, style, start=0.0, dur=None, jobs=2, out=None):
 def stills(pdir, style, times, sheet=None, cols=4, S=None, P=None, label=True):
     P = P or Project(pdir)
     S = S or load_style(style, P)
-    ims = [Image.fromarray(np.clip(S.frame(t), 0, 255).astype(np.uint8)) for t in times]
+    ims = [Image.fromarray(np.clip(out_frame(S, t), 0, 255).astype(np.uint8)) for t in times]
     if sheet:
-        tw, th = 360, 640
+        tw, th = 360, 360 * P.OH // P.OW
         rows = (len(ims) + cols - 1) // cols
         sh = Image.new('RGB', (cols * tw + (cols + 1) * 12, rows * th + (rows + 1) * 12), (24, 24, 28))
         for k, im in enumerate(ims):

@@ -6,7 +6,8 @@ import subprocess
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
-W, H, FPS = 1080, 1920, 30
+W, H, FPS = 1080, 1920, 30  # design canvas; styles draw here, output is a crop (see ASPECTS)
+ASPECTS = {'3:4': (1080, 1440), '9:16': (1080, 1920)}
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FONT = {k: os.path.join(ROOT, 'fonts', v) for k, v in dict(
     brush='mashan.ttf', wild='liujian.ttf', zhimang='zhimang.ttf', hand='zcoolxw.ttf',
@@ -265,6 +266,8 @@ class Project:
         self.subtitle = cfg.get('subtitle', '')
         self.credits = cfg.get('credits', '')
         self.seal = cfg.get('seal', '')
+        self.aspect = cfg.get('aspect', '3:4')
+        self.OW, self.OH = ASPECTS[self.aspect]
         self.dur = float(cfg.get('duration') or audio_duration(self.audio))
         fp = os.path.join(self.dir, 'features.npz')
         st = os.stat(self.audio)
